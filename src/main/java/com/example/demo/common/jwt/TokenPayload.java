@@ -10,9 +10,7 @@ import lombok.ToString;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @ToString
@@ -22,15 +20,19 @@ public class TokenPayload {
   private final int permission;
   private final String expires;
   private final String subject;
+  private final String role;
+  private final Map<String, Object> payload = new HashMap<>();
 
   public TokenPayload(
       int permission,
       LocalDateTime expires,
-      String subject) {
+      String subject,
+      String role) {
     id = UUID.randomUUID().toString();
     this.permission = permission;
     this.expires = expires.toString();
     this.subject = subject;
+    this.role = role;
   }
 
   @JsonCreator
@@ -38,11 +40,13 @@ public class TokenPayload {
       @JsonProperty("id") String id,
       @JsonProperty("permission") int permission,
       @JsonProperty("expires") String expires,
-      @JsonProperty("subject") String subject) {
+      @JsonProperty("subject") String subject,
+      @JsonProperty("role") String role) {
     this.id = id;
     this.permission = permission;
     this.expires = expires;
     this.subject = subject;
+    this.role = role;
   }
 
   @JsonCreator
@@ -53,6 +57,7 @@ public class TokenPayload {
     permission = header.getPermission();
     expires = header.getExpires();
     subject = header.getSubject();
+    role = header.getRole();
   }
 
   private byte[] decodeBase64(String tokenBase64) {

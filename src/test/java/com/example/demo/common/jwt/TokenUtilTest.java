@@ -17,7 +17,7 @@ class TokenUtilTest {
   @Test
   void 토큰완성테스트() {
     TokenHeader tokenHeader = new TokenHeader(Algorithm.HS256, "jwt");
-    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now(), "access_token");
+    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now(), "access_token", "ROLE_USER");
 
     Token token = new Token(tokenHeader, tokenPayload, VALID_SECRET_KEY);
     String tokenBase64 = token.getEncodingToken();
@@ -29,7 +29,7 @@ class TokenUtilTest {
   @Test
   void 토큰해독테스트() {
     TokenHeader tokenHeader = new TokenHeader(Algorithm.HS256, "jwt");
-    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now(), "access_token");
+    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now(), "access_token", "ROLE_USER");
 
     Token token = new Token(tokenHeader, tokenPayload, VALID_SECRET_KEY);
     String tokenBase64 = token.getEncodingToken();
@@ -41,7 +41,7 @@ class TokenUtilTest {
   @Test
   void 만료된토큰테스트() {
     TokenHeader tokenHeader = new TokenHeader(Algorithm.HS256, "jwt");
-    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now(), "access_token");
+    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now(), "access_token", "ROLE_USER");
 
     Token issueToken = new Token(tokenHeader, tokenPayload, VALID_SECRET_KEY);
     assertThrows(RuntimeException.class, () -> issueToken.validate(VALID_SECRET_KEY));
@@ -50,7 +50,7 @@ class TokenUtilTest {
   @Test
   void 토큰유효성성공테스트() {
     TokenHeader tokenHeader = new TokenHeader(Algorithm.HS256, "jwt");
-    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now().plusHours(1), "access_token");
+    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now().plusHours(1), "access_token", "ROLE_USER");
 
     Token issueToken = new Token(tokenHeader, tokenPayload, VALID_SECRET_KEY);
     assertDoesNotThrow(() -> issueToken.validate(VALID_SECRET_KEY));
@@ -59,7 +59,7 @@ class TokenUtilTest {
   @Test
   void 토큰유효성실패테스트() {
     TokenHeader tokenHeader = new TokenHeader(Algorithm.HS256, "jwt");
-    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now().plusHours(1), "access_token");
+    TokenPayload tokenPayload = new TokenPayload(0, LocalDateTime.now().plusHours(1), "access_token", "ROLE_USER");
 
     Token issueToken = new Token(tokenHeader, tokenPayload, INVALID_SECRET_KEY);
     assertThrows(RuntimeException.class, () -> issueToken.validate(VALID_SECRET_KEY));

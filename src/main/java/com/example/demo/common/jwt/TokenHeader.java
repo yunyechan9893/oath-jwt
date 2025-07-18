@@ -28,6 +28,11 @@ public class TokenHeader {
     this.typ = typ;
   }
 
+  public TokenHeader() {
+    this.alg = Algorithm.HS256;
+    this.typ = "jwt";
+  }
+
   @JsonCreator
   public TokenHeader(String serializedTokenHeader) {
     byte[] headerBytes = decodeBase64(serializedTokenHeader);
